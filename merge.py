@@ -44,6 +44,7 @@ def parse_filename(file_path):
     return FilmProperties(name=name, encoding=name[:2], chapter=name[2:4], file_number=name[4:8])
 
 
+
 def group_files(folder):
     """ For given folder, creates input files where it separates all the stuff belonging together. """
     grouping = defaultdict(list)
@@ -53,19 +54,18 @@ def group_files(folder):
             continue
         grouping[f"{properties.encoding}{properties.file_number}"].append(properties)
 
+    # Remove empty or just one, and sort the list by chapter just in case
+    grouping = {k: sorted(v, key=lambda x: x.chapter) for k, v in grouping.items() if len(v) > 1}
+
     # If input folder exists just clean it out
     if path.exists("input"):
         shutil.rmtree("input")
     mkdir("input")
 
     for key, files in grouping.items():
-        if len(files) > 1:
-            with open(path.join("input", f"{key}.txt"), "w") as f:
-                for props in files:
-                    f.write(f"file {path.join(folder, props.name)}\n")
-        else:
-            print(f"Skipping merge for {[file.name for file in files]} as only one chapter was found.")
-
+        with open(path.join("input", f"{key}.txt"), "w") as f:
+            for props in files:
+                f.write(f"file {path.join(folder, props.name)}\n")
     return "input", grouping
 
 
@@ -73,9 +73,8 @@ def merge_all(ffmpeg_path, input_folder, output_folder):
     """ Given a folder it will get all txt files inside and run merge on it. """
     grouped_folder, grouped_films = group_files(input_folder)
     for key, files in grouped_films.items():
-        if len(files) > 1:
-            files = path.join(grouped_folder, f"{key}.txt")
-            run_merge(ffmpeg_path, files, output_folder, key)
+        files = path.join(grouped_folder, f"{key}.txt")
+        run_merge(ffmpeg_path, files, output_folder, key)
 
 
 if __name__ == "__main__":

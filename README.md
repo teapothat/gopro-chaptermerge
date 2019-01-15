@@ -1,7 +1,7 @@
 # gopro-chaptermerge
 Merges gopro chapters.
 
-# WARNING: GPS trace and other gopro specific metadata is not conserved.
+# WARNING: Telemetry data is not merged and will be missing from merged files.
 
 ## Requirements
 
