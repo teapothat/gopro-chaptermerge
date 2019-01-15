@@ -64,7 +64,7 @@ def group_files(folder):
                 for props in files:
                     f.write(f"file {path.join(folder, props.name)}\n")
         else:
-            print(f"Skipping merge for {files.name} as only one chapter was found.")
+            print(f"Skipping merge for {[file.name for file in files]} as only one chapter was found.")
 
     return "input", grouping
 
@@ -72,9 +72,10 @@ def group_files(folder):
 def merge_all(ffmpeg_path, input_folder, output_folder):
     """ Given a folder it will get all txt files inside and run merge on it. """
     grouped_folder, grouped_films = group_files(input_folder)
-    for key, _ in grouped_films.items():
-        files = path.join(grouped_folder, f"{key}.txt")
-        run_merge(ffmpeg_path, files, output_folder, key)
+    for key, files in grouped_films.items():
+        if len(files) > 1:
+            files = path.join(grouped_folder, f"{key}.txt")
+            run_merge(ffmpeg_path, files, output_folder, key)
 
 
 if __name__ == "__main__":
