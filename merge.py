@@ -12,7 +12,8 @@ FilmProperties = namedtuple("FilmProperties",  ['name', 'encoding', 'chapter', '
 def run_merge(ffmpeg_path, files, output_folder, key, merge_suffix="M"):
     """ Runs command ffmpeg -f concat -i input.txt -c copy output.mp4"""
     output = path.join(output_folder, f"{key}{merge_suffix}.mp4")
-    command = [ffmpeg_path, "-f", "concat", "-safe", "0", "-i", files, "-c", "copy", output]
+    command = [ffmpeg_path, "-f", "concat", "-safe", "0",  "-map_metadata", "0:g", "-i",
+               files, "-c:v", "libx265", "-crf", "22", "-c:a", "copy",  output]
     print("Running merge for ")
     print(files)
     with open(files) as f:
@@ -55,7 +56,7 @@ def group_files(folder):
         grouping[f"{properties.encoding}01{properties.file_number}"].append(properties)
 
     # Remove empty or just one, and sort the list by chapter just in case
-    grouping = {k: sorted(v, key=lambda x: x.chapter) for k, v in grouping.items() if len(v) > 1}
+    grouping = {k: sorted(v, key=lambda x: x.chapter) for k, v in grouping.items() if len(v) > 0}
 
     # If input folder exists just clean it out
     if path.exists("input"):
