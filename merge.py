@@ -21,7 +21,7 @@ def run_merge(ffmpeg_path, files, output_folder, key, merge_suffix="M"):
     print("Will run commnad", " ".join(command))
     try:
         result = subprocess.run(command, stdout=subprocess.PIPE)
-    except  Exception as e:
+    except Exception as e:
         print("Failed to execute command", " ".join(command))
         print(e)
         return
@@ -59,9 +59,12 @@ def group_files(folder):
     mkdir("input")
 
     for key, files in grouping.items():
-        with open(path.join("input", f"{key}.txt"), "w") as f:
-            for props in files:
-                f.write(f"file {path.join(folder, props.name)}\n")
+        if len(files) > 1:
+            with open(path.join("input", f"{key}.txt"), "w") as f:
+                for props in files:
+                    f.write(f"file {path.join(folder, props.name)}\n")
+        else:
+            print(f"Skipping merge for {files.name} as only one chapter was found.")
 
     return "input", grouping
 
