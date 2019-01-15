@@ -12,3 +12,7 @@ Requires you have ffmpg
 ```bash
 python3 merge.py /path/to/ffmpg /input/folder /output/folder
 ```
+
+##TODO
+
+- sort by chapter

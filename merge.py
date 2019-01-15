@@ -12,7 +12,7 @@ FilmProperties = namedtuple("FilmProperties",  ['name', 'encoding', 'chapter', '
 def run_merge(ffmpeg_path, files, output_folder, key, merge_suffix="M"):
     """ Runs command ffmpeg -f concat -i input.txt -c copy output.mp4"""
     output = path.join(output_folder, f"{key}{merge_suffix}.mp4")
-    command = [ffmpeg_path, "-f", "concat", "-i", files, "-c", "copy", output]
+    command = [ffmpeg_path, "-f", "concat", "-safe", "0", "-i", files, "-c", "copy", output]
     print("Running merge for ")
     print(files)
     with open(files) as f:
