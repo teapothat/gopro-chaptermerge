@@ -1,0 +1,32 @@
+As taken from https://gopro.com/help/articles/question_answer/GoPro-Camera-File-Naming-Convention
+
+
+Single Video
+
+GH01xxxx.mp4
+GX01xxxx.mp4
+
+“H” = AVC encoding
+“X” = HEVC encoding
+‘xxxx = file number
+
+
+Chaptered Video
+
+GHzzxxxx.mp4
+GXzzxxxx.mp4
+
+“H” = AVC encoding
+“X” = HEVC encoding
+‘xxxx’ = file number
+‘zz’ = chapter number
+
+Looping Video
+
+GHYYxxxx.mp4
+GXYYxxxx.mp4
+
+“H” = AVC encoding
+“X” = HEVC encoding
+‘xxxx’ = file number
+‘YY’ = looped prefix
