@@ -52,7 +52,7 @@ def group_files(folder):
         properties = parse_filename(file_path)
         if not properties:
             continue
-        grouping[f"{properties.encoding}{properties.file_number}"].append(properties)
+        grouping[f"{properties.encoding}01{properties.file_number}"].append(properties)
 
     # Remove empty or just one, and sort the list by chapter just in case
     grouping = {k: sorted(v, key=lambda x: x.chapter) for k, v in grouping.items() if len(v) > 1}
