@@ -1,9 +1,12 @@
 # gopro-chaptermerge
-Merges gopro chapters.
+Merges gopro chapters using ffmpg utility.
+
+Telemetry data is conserved.
 
 ## Requirements
 
 Requires python > 3.5
+
 Requires you have ffmpg
 
 ## Usage
