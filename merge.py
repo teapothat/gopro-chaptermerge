@@ -5,15 +5,16 @@ import shutil
 import subprocess
 from collections import namedtuple, defaultdict
 
+FilmProperties = namedtuple("FilmProperties", ['name', 'encoding', 'chapter', 'file_number'])
 
-FilmProperties = namedtuple("FilmProperties",  ['name', 'encoding', 'chapter', 'file_number'])
 
-
-def run_merge(ffmpeg_path, files, output_folder, key, merge_suffix="M"):
+def run_merge(ffmpeg_path, files, input_folder, output_folder, key, merge_suffix="M"):
     """ Runs command ffmpeg -f concat -i input.txt -c copy output.mp4"""
     output = path.join(output_folder, f"{key}{merge_suffix}.mp4")
-    command = [ffmpeg_path, "-f", "concat", "-safe", "0",  "-map_metadata", "0:g", "-i",
-               files, "-c:v", "libx265", "-crf", "22", "-c:a", "copy",  output]
+    firstfile = path.join(input_folder, f"{key}.mp4")
+    command = [ffmpeg_path, "-f", "concat", "-safe", "0", "-i", files, "-i", firstfile,
+               "-map", "0:0", "-map", "0:1", "-map", "0:3", "-c:v", "libx265", "-x265-params", "range=full",
+               "-dst_range", "1", "-c:a", "copy", "-c:d", "copy", "-map_metadata", "1:g", output]
     print("Running merge for ")
     print(files)
     with open(files) as f:
@@ -45,7 +46,6 @@ def parse_filename(file_path):
     return FilmProperties(name=name, encoding=name[:2], chapter=name[2:4], file_number=name[4:8])
 
 
-
 def group_files(folder):
     """ For given folder, creates input files where it separates all the stuff belonging together. """
     grouping = defaultdict(list)
@@ -75,7 +75,7 @@ def merge_all(ffmpeg_path, input_folder, output_folder):
     grouped_folder, grouped_films = group_files(input_folder)
     for key, files in grouped_films.items():
         files = path.join(grouped_folder, f"{key}.txt")
-        run_merge(ffmpeg_path, files, output_folder, key)
+        run_merge(ffmpeg_path, files, input_folder, output_folder, key)
 
 
 if __name__ == "__main__":
@@ -88,4 +88,3 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     merge_all(args.ffmpeg_path, args.input_folder, args.output_folder)
-
